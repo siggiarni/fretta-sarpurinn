@@ -1,4 +1,11 @@
-<div *ngFor="let item of feeds">
-  <h3><a [href]="item.link" target="_blank">{{ item.title }}</a></h3>
-  <p>{{ item.description }}</p>
-</div>
+<ul class="links">
+  <li class="item" *ngFor="let item of feeds">
+    <a class="link" [href]="item.link" target="_blank">{{ item.title }}</a>
+    <time
+      *ngIf="item.pubDate"
+      class="headline-time"
+      [attr.datetime]="item.pubDate"
+      >{{ item.pubDate | date: 'dd MMMM y, HH:mm' }}</time
+    >
+  </li>
+</ul>

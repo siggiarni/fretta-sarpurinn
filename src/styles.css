@@ -1,11 +1,101 @@
-/* You can add global styles to this file, and also import other style files */
-
-body {
-  background-color: silver;
+:root {
+  color-scheme: light dark;
 }
 
-main {
-  border: 10px solid red;
-  max-width: 80ch;
-  /* margin-inline: auto; */
+* {
+  /* outline: thin solid red; */
+}
+
+body {
+  margin-inline: auto;
+  margin-block: 2rem;
+  padding-inline: 2rem;
+  max-width: 90ch;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.feeds {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  gap: 1rlh 0.5rem;
+}
+
+.item {
+  /* margin-block: 0.5rlh; */
+  display: grid;
+  grid-column: span 3;
+  grid-template-columns: subgrid;
+  /* grid-template-rows: 1fr 1fr; */
+  align-items: center;
+
+  &:focus-within {
+    outline: 2px solid highlight;
+    outline-offset: 2px;
+    background-color: whitesmoke;
+  }
+
+  span {
+    grid-column: 1 / 2;
+  }
+  time {
+    grid-column: 2 / 3;
+    font-size: 0.9rem;
+  }
+  p {
+    margin: 0;
+  }
+  p {
+    grid-column: 3 / 4;
+    font-weight: bold;
+    text-wrap: balance;
+  }
+  a {
+    outline: none;
+  }
+}
+
+.badge {
+  padding: 0.25rem 0.5rem;
+  display: inline-block;
+  background-color: var(--badge-bg-color, #888);
+  color: var(--badge-color, #fff);
+  text-align: center;
+  border-radius: 0.25rem;
+}
+
+.badge.visir {
+  --badge-bg-color: #2f5396;
+}
+
+.badge.mbl {
+  --badge-bg-color: #00005f;
+}
+
+.badge.heimildin {
+  --badge-bg-color: #181a1b;
+}
+
+.badge.dv {
+  --badge-bg-color: #b70f15;
+}
+
+.badge.fibfrettir {
+  --badge-bg-color: #003a99;
+}
+
+.badge.ruv {
+  --badge-bg-color: rgb(0, 115, 160);
+}
+
+.badge.vedur {
+  --badge-bg-color: whitesmoke;
+  --badge-color: #000;
+}
+
+.headline-time {
+  font-size: 0.95rem;
 }

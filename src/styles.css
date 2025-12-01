@@ -11,7 +11,7 @@ body {
   margin-block: 2rem;
   padding-inline: 2rem;
   max-width: 90ch;
-  font-family: system-ui, sans-serif;
+  font-family: ui-serif, serif;
   line-height: 1.5;
 }
 
@@ -42,18 +42,18 @@ body {
     grid-column: 1 / 2;
   }
   time {
-    grid-column: 2 / 3;
     font-size: 0.9rem;
+    /* grid-column: 3 / 4; */
+    /* font-weight: normal; */
+    margin-inline-start: 0.5rem;
   }
   p {
+    grid-column: 2 / 3;
     margin: 0;
-  }
-  p {
-    grid-column: 3 / 4;
-    font-weight: bold;
     text-wrap: balance;
   }
   a {
+    font-weight: bold;
     outline: none;
   }
 }

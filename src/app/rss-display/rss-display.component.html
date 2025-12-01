@@ -1,10 +1,9 @@
 <ul class="feeds">
   <li class="item" *ngFor="let item of feeds">
     <span class="badge" [ngClass]="item.sourceSlug">{{ item.sourceName }}</span>
-    <time *ngIf="item.pubDate" class="headline-time" [attr.datetime]="item.pubDate">{{ item.pubDate | date: 'dd.MM.y HH:mm' }}</time>
     <p>
-
       <a class="link" [href]="item.link" target="_blank">{{ item.title }}</a>
+      <time *ngIf="item.pubDate" class="headline-time" [attr.datetime]="item.pubDate">({{ item.pubDate | date: 'dd.MM.y HH:mm' }})</time>
     </p>
   </li>
 </ul>

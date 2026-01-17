@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RssFeedService } from '../rss-feed.service';
+import { Subject } from 'rxjs';
+import { takeUntil, catchError, timeout } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface FeedItem {
   title: string;
@@ -20,8 +23,13 @@ interface FeedSourceMeta {
   templateUrl: './rss-display.component.html',
   styleUrls: ['./rss-display.component.css'],
 })
-export class RssDisplayComponent implements OnInit {
+export class RssDisplayComponent implements OnInit, OnDestroy {
   feeds: FeedItem[] = [];
+  loading = true;
+  loadedFeeds = 0;
+  totalFeeds = 0;
+  failedFeeds: string[] = [];
+  private destroy$ = new Subject<void>();
   rssUrls: string[] = [
     'https://www.visir.is/rss/allt',
     'https://www.mbl.is/feeds/fp/',
@@ -49,14 +57,44 @@ export class RssDisplayComponent implements OnInit {
   constructor(private rssFeedService: RssFeedService) {}
 
   ngOnInit(): void {
+    this.totalFeeds = this.rssUrls.length;
+
+    // Fetch all feeds in parallel with individual subscriptions for progressive loading
     this.rssUrls.forEach((url) => {
-      this.rssFeedService.fetchRssFeed(url).subscribe((feed) => {
-        const limitedFeed = feed.slice(0, this.maxItemsPerFeed);
-        const enrichedFeed = this.enrichFeedItems(limitedFeed, url);
-        this.feeds = this.feeds.concat(enrichedFeed);
-        this.sortFeedsByDate();
-      });
+      this.rssFeedService.fetchRssFeed(url)
+        .pipe(
+          timeout(30000), // 30 second timeout per feed
+          catchError((error) => {
+            console.error(`Failed to load feed from ${url}:`, error);
+            const meta = this.feedSourceMeta[url] ?? this.deriveMetaFromUrl(url);
+            this.failedFeeds.push(meta.name);
+            return of([]); // Return empty array on error
+          }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (feed) => {
+            this.loadedFeeds++;
+
+            if (feed.length > 0) {
+              const limitedFeed = feed.slice(0, this.maxItemsPerFeed);
+              const enrichedFeed = this.enrichFeedItems(limitedFeed, url);
+              this.feeds = this.feeds.concat(enrichedFeed);
+              this.sortFeedsByDate();
+            }
+
+            // Mark loading as complete when all feeds have been processed
+            if (this.loadedFeeds === this.totalFeeds) {
+              this.loading = false;
+            }
+          }
+        });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private enrichFeedItems(items: any[], feedUrl: string): FeedItem[] {

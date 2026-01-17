@@ -1,4 +1,16 @@
-<ul class="feeds">
+<div *ngIf="loading && feeds.length === 0" class="loading">
+  <p>Sæki fréttir... ({{ loadedFeeds }}/{{ totalFeeds }})</p>
+</div>
+
+<div *ngIf="loading && feeds.length > 0" class="loading-progress">
+  <p>Sæki fleiri fréttir... ({{ loadedFeeds }}/{{ totalFeeds }})</p>
+</div>
+
+<div *ngIf="failedFeeds.length > 0" class="error-message">
+  <p>Ekki tókst að sækja fréttir frá: {{ failedFeeds.join(', ') }}</p>
+</div>
+
+<ul class="feeds" *ngIf="feeds.length > 0">
   <li class="item" *ngFor="let item of feeds">
     <span class="badge" [ngClass]="item.sourceSlug">{{ item.sourceName }}</span>
     <p>

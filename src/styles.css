@@ -99,3 +99,31 @@ body {
 .headline-time {
   font-size: 0.95rem;
 }
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.loading-progress {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  color: #999;
+  font-style: italic;
+}
+
+.error-message {
+  background-color: #fee;
+  border-left: 4px solid #c33;
+  padding: 1rem;
+  margin-block: 1rem;
+  border-radius: 0.25rem;
+}
+
+.error-message p {
+  margin: 0;
+  color: #c33;
+}

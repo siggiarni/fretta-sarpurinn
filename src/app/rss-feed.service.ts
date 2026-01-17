@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +45,10 @@ export class RssFeedService {
         // Cache the feed data and timestamp
         this.cache[feedUrl] = items;
         this.cacheTimestamps[feedUrl] = now;
+      }),
+      catchError((error) => {
+        console.error(`Error fetching RSS feed from ${feedUrl}:`, error);
+        return of([]); // Return empty array on error to prevent app crash
       })
     );
   }

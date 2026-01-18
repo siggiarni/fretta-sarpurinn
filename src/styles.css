@@ -2,6 +2,10 @@
   color-scheme: light dark;
 }
 
+* {
+  min-width: 0;
+}
+
 body {
   margin-inline: auto;
   margin-block: 2rem;
@@ -56,11 +60,17 @@ h1 {
   width: 5rem;
   margin-inline-end: 1rem;
   padding: 0.5rem 0.5rem;
-  display: inline-block;
+  display: none;
   background-color: var(--badge-bg-color, #888);
   color: var(--badge-color, #fff);
   text-align: center;
   border-radius: 0.25rem;
+}
+
+@media screen and (min-width: 600px) {
+  .badge {
+    display: inline-block;
+  }
 }
 
 .badge.visir {

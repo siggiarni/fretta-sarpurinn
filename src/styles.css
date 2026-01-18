@@ -26,14 +26,19 @@ h1 {
   padding: 0;
   margin: 0;
   list-style: none;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1rlh 0.5rem;
 }
 
 .item {
-  display: flex;
+  display: grid;
+  grid-template-rows: subgrid;
   align-items: center;
+
+  @media screen and (min-width: 600px) {
+    grid-template-columns: max-content 1fr;
+  }
 
   &:focus-within {
     outline: 2px solid highlight;
@@ -100,10 +105,6 @@ h1 {
 .badge.vedur {
   --badge-bg-color: whitesmoke;
   --badge-color: #000;
-}
-
-.headline-time {
-  font-size: 0.95rem;
 }
 
 .loading {

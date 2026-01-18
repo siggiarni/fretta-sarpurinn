@@ -37,7 +37,7 @@ Requires Cloudflare authentication (`npx wrangler login`).
 - RxJS `takeUntil(destroy$)` for subscription cleanup
 - Observable-based API returning empty arrays on error (graceful degradation)
 - Feed items enriched with source metadata for color-coded badges
-- Flexbox-based responsive layout
+- CSS Grid with subgrid for responsive layout
 
 **Feed sources** are hardcoded in `rss-display.component.ts` with metadata (name, color scheme). RSS URLs use rss2json.com: `https://api.rss2json.com/v1/api.json?rss_url=...`
 

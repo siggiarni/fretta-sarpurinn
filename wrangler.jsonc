@@ -3,7 +3,7 @@
   "name": "fretta-sarpurinn",
   "compatibility_date": "2026-01-18",
   "assets": {
-    "directory": "./dist/fretta-sarpurinn",
+    "directory": "./dist/fretta-sarpurinn/browser",
     "not_found_handling": "single-page-application",
   },
 }

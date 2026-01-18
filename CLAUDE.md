@@ -14,6 +14,16 @@ npm run build   # Production build to dist/
 npm test        # Run tests with Karma/Jasmine (Chrome)
 ```
 
+## Deployment
+
+Hosted on Cloudflare Workers: https://fretta-sarpurinn.sigurdur.workers.dev
+
+```bash
+npm run build && npx wrangler deploy
+```
+
+Requires Cloudflare authentication (`npx wrangler login`).
+
 ## Architecture
 
 **Module-based Angular app (not standalone components)**

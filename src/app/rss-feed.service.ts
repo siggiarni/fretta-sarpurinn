@@ -8,7 +8,7 @@ import { map, tap, catchError } from 'rxjs/operators';
 })
 export class RssFeedService {
   private cache: { [url: string]: any[] } = {};
-  private cacheDuration = 600000; // Cache duration in milliseconds (e.g., 10 minutes)
+  private cacheDuration = 60000; // Cache duration in milliseconds (1 minute)
   private cacheTimestamps: { [url: string]: number } = {};
 
   constructor(private http: HttpClient) {}

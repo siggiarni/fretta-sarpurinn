@@ -13,9 +13,9 @@
 <ul class="feeds" *ngIf="feeds.length > 0">
   <li class="item" *ngFor="let item of feeds">
     <span class="badge" [ngClass]="item.sourceSlug">{{ item.sourceName }}</span>
-    <p>
-      <a class="link" [href]="item.link" target="_blank">{{ item.title }}</a>
-      <time *ngIf="item.pubDate" class="headline-time" [attr.datetime]="item.pubDate">({{ item.pubDate | date: 'dd.MM.y HH:mm' }})</time>
-    </p>
+    <h2 class="item__headline">
+      <a class="item__link" [href]="item.link" target="_blank">{{ item.title }}</a>
+      <time *ngIf="item.pubDate" class="item__timestamp" [attr.datetime]="item.pubDate">({{ item.pubDate | date: 'dd.MM.y HH:mm' }})</time>
+    </h2>
   </li>
 </ul>

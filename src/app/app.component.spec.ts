@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppComponent } from './app.component';
@@ -8,9 +7,6 @@ import { RssDisplayComponent } from './rss-display/rss-display.component';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ],
       declarations: [
         AppComponent,
         RssDisplayComponent
@@ -38,6 +34,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Fréttasarpurinn');
+    const titleText = compiled.querySelector('h1')?.textContent?.replace(/\u00AD/g, '');
+    expect(titleText).toContain('Fréttasarpurinn');
   });
 });

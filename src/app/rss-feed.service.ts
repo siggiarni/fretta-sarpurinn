@@ -3,17 +3,38 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 
+interface RawFeedItem {
+  title: string;
+  link: string;
+  description?: string;
+  pubDate?: string;
+  pubdate?: string;
+  published?: string;
+}
+
+interface RssResponse {
+  status: string;
+  items: RawFeedItem[];
+}
+
+export interface FeedItem {
+  title: string;
+  link: string;
+  description?: string;
+  pubDate?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class RssFeedService {
-  private cache: { [url: string]: any[] } = {};
+  private cache: { [url: string]: FeedItem[] } = {};
   private cacheDuration = 60000; // Cache duration in milliseconds (1 minute)
   private cacheTimestamps: { [url: string]: number } = {};
 
   constructor(private http: HttpClient) {}
 
-  fetchRssFeed(feedUrl: string): Observable<any[]> {
+  fetchRssFeed(feedUrl: string): Observable<FeedItem[]> {
     // Check if the feed is cached and still valid
     const now = Date.now();
     if (
@@ -28,13 +49,13 @@ export class RssFeedService {
       'https://api.rss2json.com/v1/api.json?rss_url=' +
       encodeURIComponent(feedUrl);
 
-    return this.http.get(rss2jsonUrl).pipe(
-      map((response: any) => {
+    return this.http.get<RssResponse>(rss2jsonUrl).pipe(
+      map((response) => {
         if (response.status !== 'ok' || !Array.isArray(response.items)) {
           throw new Error(`Failed to load RSS feed: ${feedUrl}`);
         }
 
-        return response.items.map((item: any) => ({
+        return response.items.map((item) => ({
           title: item.title,
           link: item.link,
           description: item.description,

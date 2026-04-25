@@ -21,7 +21,7 @@ interface FeedSourceMeta {
 @Component({
   selector: 'app-rss-display',
   templateUrl: './rss-display.component.html',
-  styleUrls: ['./rss-display.component.css'],
+  styleUrl: './rss-display.component.css',
 })
 export class RssDisplayComponent implements OnInit, OnDestroy {
   feeds: FeedItem[] = [];
@@ -30,7 +30,7 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
   totalFeeds = 0;
   failedFeeds: string[] = [];
   private destroy$ = new Subject<void>();
-  rssUrls: string[] = [
+  private readonly rssUrls: string[] = [
     'https://www.visir.is/rss/allt',
     'https://www.mbl.is/feeds/fp/',
     'https://heimildin.is/rss/',
@@ -39,9 +39,9 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
     'https://www.ruv.is/rss/frettir',
     'https://www.vedur.is/um-vi/frettir/rss.xml',
   ];
-  maxItemsPerFeed = 5; // Set the maximum number of items to display
+  private readonly maxItemsPerFeed = 5;
 
-  private feedSourceMeta: Record<string, FeedSourceMeta> = {
+  private readonly feedSourceMeta: Record<string, FeedSourceMeta> = {
     'https://www.visir.is/rss/allt': { name: 'Vísir', slug: 'visir' },
     'https://www.mbl.is/feeds/fp/': { name: 'MBL', slug: 'mbl' },
     'https://heimildin.is/rss/': { name: 'Heimildin', slug: 'heimildin' },
@@ -121,7 +121,7 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
   }
 
   private sortFeedsByDate(): void {
-    this.feeds = this.feeds.sort((a, b) => {
+    this.feeds.sort((a, b) => {
       const getTime = (item: FeedItem) => {
         if (!item?.pubDate) {
           return 0;

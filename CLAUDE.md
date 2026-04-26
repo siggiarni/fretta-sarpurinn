@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FrettaSarpurinn is an Angular 18 RSS feed aggregator that displays news from Icelandic media outlets. It fetches feeds via rss2json.com API (for CORS bypass), caches results client-side, and presents them in a unified chronological feed.
+FrettaSarpurinn is an Angular 21 RSS feed aggregator that displays news from Icelandic media outlets. It fetches feeds via rss2json.com API (for CORS bypass), caches results client-side, and presents them in a unified chronological feed.
 
 ## Commands
 
@@ -30,7 +30,7 @@ Requires Cloudflare authentication (`npx wrangler login`).
 
 - `src/main.ts` - Bootstrap entry point
 - `src/app/app.module.ts` - Root NgModule with HttpClient provider
-- `src/app/rss-feed.service.ts` - RSS fetching with caching (10-min TTL) and 30s timeout
+- `src/app/rss-feed.service.ts` - RSS fetching with caching (1-min TTL) and 30s timeout
 - `src/app/rss-display/` - Main display component with progressive loading
 
 **Key patterns:**

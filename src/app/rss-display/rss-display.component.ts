@@ -15,9 +15,10 @@ interface FeedSourceMeta {
 }
 
 @Component({
-  selector: 'app-rss-display',
-  templateUrl: './rss-display.component.html',
-  styleUrl: './rss-display.component.css',
+    selector: 'app-rss-display',
+    templateUrl: './rss-display.component.html',
+    styleUrl: './rss-display.component.css',
+    standalone: false
 })
 export class RssDisplayComponent implements OnInit, OnDestroy {
   feeds: FeedItem[] = [];

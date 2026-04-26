@@ -35,6 +35,6 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     const titleText = compiled.querySelector('h1')?.textContent?.replace(/\u00AD/g, '');
-    expect(titleText).toContain('Fréttasarpurinn');
+    expect(titleText).toContain('Frétta sarpurinn');
   });
 });

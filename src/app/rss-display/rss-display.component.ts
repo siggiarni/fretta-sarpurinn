@@ -1,14 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RssFeedService } from '../rss-feed.service';
+import { FeedItem as RawFeedItem, RssFeedService } from '../rss-feed.service';
 import { Subject } from 'rxjs';
 import { takeUntil, catchError, timeout } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-interface FeedItem {
-  title: string;
-  link: string;
-  description?: string;
-  pubDate?: string;
+interface FeedItem extends RawFeedItem {
   sourceName: string;
   sourceSlug: string;
 }
@@ -30,7 +26,7 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
   totalFeeds = 0;
   failedFeeds: string[] = [];
   private destroy$ = new Subject<void>();
-  private readonly rssUrls: string[] = [
+  private readonly rssUrls: readonly string[] = [
     'https://www.visir.is/rss/allt',
     'https://www.mbl.is/feeds/fp/',
     'https://heimildin.is/rss/',
@@ -41,7 +37,7 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
   ];
   private readonly maxItemsPerFeed = 5;
 
-  private readonly feedSourceMeta: Record<string, FeedSourceMeta> = {
+  private readonly feedSourceMeta: Readonly<Record<string, FeedSourceMeta>> = {
     'https://www.visir.is/rss/allt': { name: 'Vísir', slug: 'visir' },
     'https://www.mbl.is/feeds/fp/': { name: 'MBL', slug: 'mbl' },
     'https://heimildin.is/rss/': { name: 'Heimildin', slug: 'heimildin' },
@@ -97,14 +93,11 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private enrichFeedItems(items: any[], feedUrl: string): FeedItem[] {
+  private enrichFeedItems(items: RawFeedItem[], feedUrl: string): FeedItem[] {
     const meta =
       this.feedSourceMeta[feedUrl] ?? this.deriveMetaFromUrl(feedUrl);
     return items.map((item) => ({
-      title: item.title,
-      link: item.link,
-      description: item.description,
-      pubDate: item.pubDate,
+      ...item,
       sourceName: meta.name,
       sourceSlug: meta.slug,
     }));

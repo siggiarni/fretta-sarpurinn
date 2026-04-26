@@ -1,21 +1,33 @@
-<div *ngIf="loading && feeds.length === 0" class="loading">
-  <p>Sæki fréttir... ({{ loadedFeeds }}/{{ totalFeeds }})</p>
-</div>
+@if (loading && feeds.length === 0) {
+  <div class="loading">
+    <p>Sæki fréttir... ({{ loadedFeeds }}/{{ totalFeeds }})</p>
+  </div>
+}
 
-<div *ngIf="loading && feeds.length > 0" class="loading-progress">
-  <p>Sæki fleiri fréttir... ({{ loadedFeeds }}/{{ totalFeeds }})</p>
-</div>
+@if (loading && feeds.length > 0) {
+  <div class="loading-progress">
+    <p>Sæki fleiri fréttir... ({{ loadedFeeds }}/{{ totalFeeds }})</p>
+  </div>
+}
 
-<div *ngIf="failedFeeds.length > 0" class="error-message">
-  <p>Ekki tókst að sækja fréttir frá: {{ failedFeeds.join(', ') }}</p>
-</div>
+@if (failedFeeds.length > 0) {
+  <div class="error-message">
+    <p>Ekki tókst að sækja fréttir frá: {{ failedFeeds.join(', ') }}</p>
+  </div>
+}
 
-<ul class="feeds" *ngIf="feeds.length > 0">
-  <li class="item" *ngFor="let item of feeds">
-    <span class="badge" [ngClass]="item.sourceSlug">{{ item.sourceName }}</span>
-    <h2 class="item__headline">
-      <a class="item__link" [href]="item.link" target="_blank">{{ item.title }}</a>
-      <time *ngIf="item.pubDate" class="item__timestamp" [attr.datetime]="item.pubDate">({{ item.pubDate | date: 'dd.MM.y HH:mm' }})</time>
-    </h2>
-  </li>
-</ul>
+@if (feeds.length > 0) {
+  <ul class="feeds">
+    @for (item of feeds; track item) {
+      <li class="item">
+        <span class="badge" [ngClass]="item.sourceSlug">{{ item.sourceName }}</span>
+        <h2 class="item__headline">
+          <a class="item__link" [href]="item.link" target="_blank">{{ item.title }}</a>
+          @if (item.pubDate) {
+            <time class="item__timestamp" [attr.datetime]="item.pubDate">({{ item.pubDate | date: 'dd.MM.y HH:mm' }})</time>
+          }
+        </h2>
+      </li>
+    }
+  </ul>
+}

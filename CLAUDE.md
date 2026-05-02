@@ -30,7 +30,7 @@ Requires Cloudflare authentication (`npx wrangler login`).
 
 - `src/main.ts` - Bootstrap entry point
 - `src/app/app.module.ts` - Root NgModule with HttpClient provider
-- `src/app/rss-feed.service.ts` - RSS fetching with caching (1-min TTL) and 30s timeout
+- `src/app/rss-feed.service.ts` - RSS fetching via rss2json (CORS proxy)
 - `src/app/rss-display/` - Main display component with progressive loading
 
 **Key patterns:**

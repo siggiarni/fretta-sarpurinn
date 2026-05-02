@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 interface RawFeedItem {
   title: string;
@@ -28,23 +28,9 @@ export interface FeedItem {
   providedIn: 'root',
 })
 export class RssFeedService {
-  private cache: { [url: string]: FeedItem[] } = {};
-  private cacheDuration = 60000; // Cache duration in milliseconds (1 minute)
-  private cacheTimestamps: { [url: string]: number } = {};
-
   constructor(private http: HttpClient) {}
 
   fetchRssFeed(feedUrl: string): Observable<FeedItem[]> {
-    // Check if the feed is cached and still valid
-    const now = Date.now();
-    if (
-      this.cache[feedUrl] &&
-      now - this.cacheTimestamps[feedUrl] < this.cacheDuration
-    ) {
-      return of(this.cache[feedUrl]);
-    }
-
-    // Use rss2json API to bypass CORS and get parsed JSON back
     const rss2jsonUrl =
       'https://api.rss2json.com/v1/api.json?rss_url=' +
       encodeURIComponent(feedUrl);
@@ -62,14 +48,9 @@ export class RssFeedService {
           pubDate: item.pubDate ?? item.pubdate ?? item.published,
         }));
       }),
-      tap((items) => {
-        // Cache the feed data and timestamp
-        this.cache[feedUrl] = items;
-        this.cacheTimestamps[feedUrl] = now;
-      }),
       catchError((error) => {
         console.error(`Error fetching RSS feed from ${feedUrl}:`, error);
-        return of([]); // Return empty array on error to prevent app crash
+        return of([]);
       })
     );
   }

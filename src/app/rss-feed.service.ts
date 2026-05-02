@@ -33,7 +33,8 @@ export class RssFeedService {
   fetchRssFeed(feedUrl: string): Observable<FeedItem[]> {
     const rss2jsonUrl =
       'https://api.rss2json.com/v1/api.json?rss_url=' +
-      encodeURIComponent(feedUrl);
+      encodeURIComponent(feedUrl) +
+      '&_=' + Date.now();
 
     return this.http.get<RssResponse>(rss2jsonUrl).pipe(
       map((response) => {

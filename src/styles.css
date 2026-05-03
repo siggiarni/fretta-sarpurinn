@@ -11,7 +11,7 @@ body {
   margin-block: 2rem;
   padding-inline: 2rem;
   max-width: 60ch;
-  font-family: ui-serif, serif;
+  font-family: system-ui, sans-serif;
   font-size: 1.25em;
   line-height: 1.5;
 }
@@ -52,7 +52,7 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  font-size: 1.25em;
+  font-size: 1.05em;
   text-wrap: balance;
 }
 
@@ -67,7 +67,6 @@ body {
 }
 
 .badge {
-  margin-block-end: 0.25rem;
   padding: 0.5rem 0.5rem;
   display: inline-block;
   background-color: var(--badge-bg-color, #888);

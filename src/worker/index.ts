@@ -8,6 +8,7 @@ const FEEDS: Record<string, string> = {
   heimildin: 'https://heimildin.is/rss/',
   dv: 'https://www.dv.is/feed/',
   fibfrettir: 'https://fibfrettir.is/feed/',
+  nutiminn: 'https://www.nutiminn.is/feed/',
   'ruv-innlent': 'https://www.ruv.is/rss/innlent',
   'ruv-erlent': 'https://www.ruv.is/rss/erlent',
   'ruv-ithrottir': 'https://www.ruv.is/rss/ithrottir',

@@ -34,6 +34,7 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
     { id: 'heimildin', name: 'Heimildin', slug: 'heimildin' },
     { id: 'dv', name: 'DV', slug: 'dv' },
     { id: 'fibfrettir', name: 'FÍB fréttir', slug: 'fibfrettir' },
+    { id: 'nutiminn', name: 'Nútíminn', slug: 'nutiminn' },
     { id: 'ruv-innlent', name: 'RÚV', slug: 'ruv' },
     { id: 'ruv-erlent', name: 'RÚV', slug: 'ruv' },
     { id: 'ruv-ithrottir', name: 'RÚV', slug: 'ruv' },

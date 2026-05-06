@@ -114,6 +114,11 @@ body {
   --badge-bg-color: #003a99;
 }
 
+.badge.nutiminn {
+  --badge-bg-color: #ffaa26;
+  --badge-color: #000;
+}
+
 .badge.ruv {
   --badge-bg-color: rgb(0, 115, 160);
 }

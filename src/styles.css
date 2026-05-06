@@ -19,9 +19,11 @@ body {
 .header__title {
   margin-block-end: 2rem;
   padding-block-end: 1rem;
-  border-bottom: thin dashed slategray;
   font-size: clamp(1rem, 8vw, 2.5rem);
+  font-weight: normal;
+  color: darkslategray;
   text-align: center;
+  border-bottom: thin solid lightgray;
 }
 
 .feeds {
@@ -29,10 +31,11 @@ body {
   margin: 0;
   list-style: none;
   display: grid;
+  gap: 1em;
 }
 
 .item {
-  margin: 1em 0;
+  padding: 0.5em;
 
   @media screen and (min-width: 600px) {
     display: grid;
@@ -44,6 +47,10 @@ body {
   &:focus-within {
     outline: 2px solid highlight;
     outline-offset: 2px;
+    background-color: whitesmoke;
+  }
+
+  &:nth-child(even) {
     background-color: whitesmoke;
   }
 }

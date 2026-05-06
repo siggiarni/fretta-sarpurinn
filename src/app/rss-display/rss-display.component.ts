@@ -15,10 +15,10 @@ interface FeedSourceMeta {
 }
 
 @Component({
-    selector: 'app-rss-display',
-    templateUrl: './rss-display.component.html',
-    styleUrl: './rss-display.component.css',
-    standalone: false
+  selector: 'app-rss-display',
+  templateUrl: './rss-display.component.html',
+  styleUrl: './rss-display.component.css',
+  standalone: false,
 })
 export class RssDisplayComponent implements OnInit, OnDestroy {
   feeds: FeedItem[] = [];
@@ -33,7 +33,11 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
     'https://heimildin.is/rss/',
     'https://www.dv.is/feed/',
     'https://fibfrettir.is/feed/',
-    'https://www.ruv.is/rss/frettir',
+    // 'https://www.ruv.is/rss/frettir',
+    'https://www.ruv.is/rss/innlent',
+    'https://www.ruv.is/rss/erlent',
+    'https://www.ruv.is/rss/ithrottir',
+    'https://www.ruv.is/rss/menning-og-daegurmal',
     'https://www.vedur.is/um-vi/frettir/rss.xml',
   ];
   private readonly maxItemsPerFeed = 5;
@@ -44,7 +48,11 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
     'https://heimildin.is/rss/': { name: 'Heimildin', slug: 'heimildin' },
     'https://www.dv.is/feed/': { name: 'DV', slug: 'dv' },
     'https://fibfrettir.is/feed/': { name: 'FÍB fréttir', slug: 'fibfrettir' },
-    'https://www.ruv.is/rss/frettir': { name: 'RÚV', slug: 'ruv' },
+    // 'https://www.ruv.is/rss/frettir': { name: 'RÚV', slug: 'ruv' },
+    'https://www.ruv.is/rss/innlent': { name: 'RÚV', slug: 'ruv' },
+    'https://www.ruv.is/rss/erlent': { name: 'RÚV', slug: 'ruv' },
+    'https://www.ruv.is/rss/ithrottir': { name: 'RÚV', slug: 'ruv' },
+    'https://www.ruv.is/rss/menning-og-daegurmal': { name: 'RÚV', slug: 'ruv' },
     'https://www.vedur.is/um-vi/frettir/rss.xml': {
       name: 'Veður',
       slug: 'vedur',
@@ -58,16 +66,18 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
 
     // Fetch all feeds in parallel with individual subscriptions for progressive loading
     this.rssUrls.forEach((url) => {
-      this.rssFeedService.fetchRssFeed(url)
+      this.rssFeedService
+        .fetchRssFeed(url)
         .pipe(
           timeout(30000), // 30 second timeout per feed
           catchError((error) => {
             console.error(`Failed to load feed from ${url}:`, error);
-            const meta = this.feedSourceMeta[url] ?? this.deriveMetaFromUrl(url);
+            const meta =
+              this.feedSourceMeta[url] ?? this.deriveMetaFromUrl(url);
             this.failedFeeds.push(meta.name);
             return of([]); // Return empty array on error
           }),
-          takeUntil(this.destroy$)
+          takeUntil(this.destroy$),
         )
         .subscribe({
           next: (feed) => {
@@ -84,7 +94,7 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
             if (this.loadedFeeds === this.totalFeeds) {
               this.loading = false;
             }
-          }
+          },
         });
     });
   }

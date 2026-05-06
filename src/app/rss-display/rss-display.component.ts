@@ -9,7 +9,8 @@ interface FeedItem extends RawFeedItem {
   sourceSlug: string;
 }
 
-interface FeedSourceMeta {
+interface FeedSource {
+  id: string;
   name: string;
   slug: string;
 }
@@ -27,55 +28,34 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
   totalFeeds = 0;
   failedFeeds: string[] = [];
   private destroy$ = new Subject<void>();
-  private readonly rssUrls: readonly string[] = [
-    'https://www.visir.is/rss/allt',
-    'https://www.mbl.is/feeds/fp/',
-    'https://heimildin.is/rss/',
-    'https://www.dv.is/feed/',
-    'https://fibfrettir.is/feed/',
-    // 'https://www.ruv.is/rss/frettir',
-    'https://www.ruv.is/rss/innlent',
-    'https://www.ruv.is/rss/erlent',
-    'https://www.ruv.is/rss/ithrottir',
-    'https://www.ruv.is/rss/menning-og-daegurmal',
-    'https://www.vedur.is/um-vi/frettir/rss.xml',
+  private readonly feedSources: readonly FeedSource[] = [
+    { id: 'visir', name: 'Vísir', slug: 'visir' },
+    { id: 'mbl', name: 'MBL', slug: 'mbl' },
+    { id: 'heimildin', name: 'Heimildin', slug: 'heimildin' },
+    { id: 'dv', name: 'DV', slug: 'dv' },
+    { id: 'fibfrettir', name: 'FÍB fréttir', slug: 'fibfrettir' },
+    { id: 'ruv-innlent', name: 'RÚV', slug: 'ruv' },
+    { id: 'ruv-erlent', name: 'RÚV', slug: 'ruv' },
+    { id: 'ruv-ithrottir', name: 'RÚV', slug: 'ruv' },
+    { id: 'ruv-menning', name: 'RÚV', slug: 'ruv' },
+    { id: 'vedur', name: 'Veður', slug: 'vedur' },
   ];
   private readonly maxItemsPerFeed = 5;
-
-  private readonly feedSourceMeta: Readonly<Record<string, FeedSourceMeta>> = {
-    'https://www.visir.is/rss/allt': { name: 'Vísir', slug: 'visir' },
-    'https://www.mbl.is/feeds/fp/': { name: 'MBL', slug: 'mbl' },
-    'https://heimildin.is/rss/': { name: 'Heimildin', slug: 'heimildin' },
-    'https://www.dv.is/feed/': { name: 'DV', slug: 'dv' },
-    'https://fibfrettir.is/feed/': { name: 'FÍB fréttir', slug: 'fibfrettir' },
-    // 'https://www.ruv.is/rss/frettir': { name: 'RÚV', slug: 'ruv' },
-    'https://www.ruv.is/rss/innlent': { name: 'RÚV', slug: 'ruv' },
-    'https://www.ruv.is/rss/erlent': { name: 'RÚV', slug: 'ruv' },
-    'https://www.ruv.is/rss/ithrottir': { name: 'RÚV', slug: 'ruv' },
-    'https://www.ruv.is/rss/menning-og-daegurmal': { name: 'RÚV', slug: 'ruv' },
-    'https://www.vedur.is/um-vi/frettir/rss.xml': {
-      name: 'Veður',
-      slug: 'vedur',
-    },
-  };
 
   constructor(private rssFeedService: RssFeedService) {}
 
   ngOnInit(): void {
-    this.totalFeeds = this.rssUrls.length;
+    this.totalFeeds = this.feedSources.length;
 
-    // Fetch all feeds in parallel with individual subscriptions for progressive loading
-    this.rssUrls.forEach((url) => {
+    this.feedSources.forEach((source) => {
       this.rssFeedService
-        .fetchRssFeed(url)
+        .fetchRssFeed(source.id)
         .pipe(
-          timeout(30000), // 30 second timeout per feed
+          timeout(30000),
           catchError((error) => {
-            console.error(`Failed to load feed from ${url}:`, error);
-            const meta =
-              this.feedSourceMeta[url] ?? this.deriveMetaFromUrl(url);
-            this.failedFeeds.push(meta.name);
-            return of([]); // Return empty array on error
+            console.error(`Failed to load feed ${source.id}:`, error);
+            this.failedFeeds.push(source.name);
+            return of([]);
           }),
           takeUntil(this.destroy$),
         )
@@ -84,13 +64,17 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
             this.loadedFeeds++;
 
             if (feed.length > 0) {
-              const limitedFeed = feed.slice(0, this.maxItemsPerFeed);
-              const enrichedFeed = this.enrichFeedItems(limitedFeed, url);
+              const enrichedFeed = feed
+                .slice(0, this.maxItemsPerFeed)
+                .map((item) => ({
+                  ...item,
+                  sourceName: source.name,
+                  sourceSlug: source.slug,
+                }));
               this.feeds = this.feeds.concat(enrichedFeed);
               this.sortFeedsByDate();
             }
 
-            // Mark loading as complete when all feeds have been processed
             if (this.loadedFeeds === this.totalFeeds) {
               this.loading = false;
             }
@@ -102,26 +86,6 @@ export class RssDisplayComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private enrichFeedItems(items: RawFeedItem[], feedUrl: string): FeedItem[] {
-    const meta =
-      this.feedSourceMeta[feedUrl] ?? this.deriveMetaFromUrl(feedUrl);
-    return items.map((item) => ({
-      ...item,
-      sourceName: meta.name,
-      sourceSlug: meta.slug,
-    }));
-  }
-
-  private deriveMetaFromUrl(feedUrl: string): FeedSourceMeta {
-    try {
-      const hostname = new URL(feedUrl).hostname.replace(/^www\./, '');
-      const slug = hostname.split('.')[0];
-      return { name: hostname, slug };
-    } catch {
-      return { name: feedUrl, slug: 'generic' };
-    }
   }
 
   private sortFeedsByDate(): void {

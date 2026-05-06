@@ -6,10 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 interface RawFeedItem {
   title: string;
   link: string;
-  description?: string;
   pubDate?: string;
-  pubdate?: string;
-  published?: string;
 }
 
 interface RssResponse {
@@ -20,7 +17,6 @@ interface RssResponse {
 export interface FeedItem {
   title: string;
   link: string;
-  description?: string;
   pubDate?: string;
 }
 
@@ -30,27 +26,23 @@ export interface FeedItem {
 export class RssFeedService {
   constructor(private http: HttpClient) {}
 
-  fetchRssFeed(feedUrl: string): Observable<FeedItem[]> {
-    const rss2jsonUrl =
-      'https://api.rss2json.com/v1/api.json?rss_url=' +
-      encodeURIComponent(feedUrl) +
-      '&_=' + Date.now();
+  fetchRssFeed(sourceId: string): Observable<FeedItem[]> {
+    const apiUrl = `/api/feed?source=${encodeURIComponent(sourceId)}`;
 
-    return this.http.get<RssResponse>(rss2jsonUrl).pipe(
+    return this.http.get<RssResponse>(apiUrl).pipe(
       map((response) => {
         if (response.status !== 'ok' || !Array.isArray(response.items)) {
-          throw new Error(`Failed to load RSS feed: ${feedUrl}`);
+          throw new Error(`Failed to load RSS feed: ${sourceId}`);
         }
 
         return response.items.map((item) => ({
           title: item.title,
           link: item.link,
-          description: item.description,
-          pubDate: item.pubDate ?? item.pubdate ?? item.published,
+          pubDate: item.pubDate,
         }));
       }),
       catchError((error) => {
-        console.error(`Error fetching RSS feed from ${feedUrl}:`, error);
+        console.error(`Error fetching RSS feed from ${sourceId}:`, error);
         return of([]);
       })
     );

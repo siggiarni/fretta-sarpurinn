@@ -20,7 +20,7 @@ body {
   margin-block-end: 2rem;
   padding-block-end: 1rem;
   border-bottom: thin dashed slategray;
-  font-size: 1.8em;
+  font-size: clamp(1rem, 8vw, 2.5rem);
   text-align: center;
 }
 

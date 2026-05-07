@@ -31,7 +31,7 @@ body {
   margin: 0;
   list-style: none;
   display: grid;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .item {
@@ -47,11 +47,11 @@ body {
   &:focus-within {
     outline: 2px solid highlight;
     outline-offset: 2px;
-    background-color: whitesmoke;
+    background-color: light-dark(whitesmoke, DarkSlateGray);
   }
 
   &:nth-child(even) {
-    background-color: whitesmoke;
+    background-color: light-dark(whitesmoke, DarkSlateGray);
   }
 }
 
